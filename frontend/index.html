@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desktop Monitoring App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>System Monitoring Dashboard</h1>
+    
+    <p>RAM Usage: <span id="ram-usage">Loading...</span>%</p>
+    <p>Disk Usage: <span id="disk-usage">Loading...</span>%</p>
+    <p id="alert"></p>
+
+    <script>
+        const socket = new WebSocket("ws://localhost:8081");
+
+        socket.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            document.getElementById("ram-usage").innerText = data.ram_usage;
+            document.getElementById("disk-usage").innerText = data.disk_usage;
+
+            const alertBox = document.getElementById("alert");
+            if (data.alert) {
+                alertBox.innerText = data.alert;
+                alertBox.style.display = "block";
+            } else {
+                alertBox.style.display = "none";
+            }
+        };
+
+        socket.onerror = function(error) {
+            console.error("WebSocket Error:", error);
+        };
+
+        socket.onclose = function() {
+            console.warn("WebSocket Connection Closed");
+        };
+    </script>
+</body>
+</html>
