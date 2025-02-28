@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  frontend:
+    image: frontend
+    build:
+      context: ./frontend
+    ports:
+      - "8000:8000"
+    networks:
+      - monitoring-net
+
+networks:
+  monitoring-net:
+    driver: bridge
