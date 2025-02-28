@@ -5,14 +5,78 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Desktop Monitoring App</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header, footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1em 0;
+        }
+        main {
+            flex: 1;
+            padding: 1em;
+        }
+        nav a {
+            color: white;
+            margin: 0 1em;
+            text-decoration: none;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .meter {
+            width: 100%;
+            height: 30px;
+            background-color: #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+        }
+        .meter span {
+            display: block;
+            height: 100%;
+            background-color: #76c7c0;
+            width: 0;
+            transition: width 0.5s;
+        }
+        .alert-box {
+            padding: 1em;
+            margin: 1em 0;
+            border: 1px solid red;
+            background-color: #f8d7da;
+            color: #721c24;
+            display: none;
+        }
+    </style>
 </head>
 <body>
-    <h1>System Monitoring Dashboard</h1>
-    
-    <p>RAM Usage: <span id="ram-usage">Loading...</span>%</p>
-    <p>Disk Usage: <span id="disk-usage">Loading...</span>%</p>
-    <p id="alert"></p>
-
+    <header>
+        <nav>
+            <a href="#">Home</a>
+            <a href="#">About</a>
+            <a href="#">Contact</a>
+        </nav>
+    </header>
+    <main>
+        <h1>System Monitoring Dashboard</h1>
+        
+        <p>RAM Usage: <span id="ram-usage">Loading...</span>%</p>
+        <p>Disk Usage: <span id="disk-usage">Loading...</span>%</p>
+        <div id="alert" class="alert-box"></div>
+        <p id="connection-status"></p>
+    </main>
+    <footer>
+        &copy; 2025 Monitoring App
+        <p>Contact us at: <a href="mailto:vashisthvishu1606@gmail.com">vashisthvishu1606@gmail.com</a></p>
+    </footer>
     <script>
         const socket = new WebSocket("ws://localhost:8081");
 
@@ -25,6 +89,7 @@
             if (data.alert) {
                 alertBox.innerText = data.alert;
                 alertBox.style.display = "block";
+                sendEmailAlert(data.alert);
             } else {
                 alertBox.style.display = "none";
             }
@@ -32,11 +97,30 @@
 
         socket.onerror = function(error) {
             console.error("WebSocket Error:", error);
+            document.getElementById("connection-status").innerText = "WebSocket Error: " + error.message;
         };
 
         socket.onclose = function() {
             console.warn("WebSocket Connection Closed");
+            document.getElementById("connection-status").innerText = "WebSocket Connection Closed";
         };
+
+        function sendEmailAlert(alertMessage) {
+            fetch('/send-alert', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ alert: alertMessage })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Email alert sent:', data);
+            })
+            .catch(error => {
+                console.error('Error sending email alert:', error);
+            });
+        }
     </script>
 </body>
 </html>

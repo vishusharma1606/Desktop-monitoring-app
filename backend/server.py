@@ -4,7 +4,7 @@ import websockets
 import psutil
 
 # WebSocket server settings
-HOST = 'localhost'
+HOST = '0.0.0.0'
 PORT = 8081  # Updated port
 
 def get_ram_usage():
