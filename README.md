@@ -16,7 +16,8 @@ Monitoring-app/
 │   ├── docker-compose.yml
 │   ├── package.json
 │   └── index.html
-└── README.md
+├──  README.md
+└──docker-compose.yml
 ```
 
 ## Prerequisites
