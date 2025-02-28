@@ -44,6 +44,10 @@ The frontend service is built with Node.js and served using `http-server`.
 
 - **Dockerfile**: Defines the Docker image for the frontend service.
 - **docker-compose.yml**: Configuration for running the frontend service with Docker Compose.
+- **package.json**: Lists the Node.js dependencies.
+- **index.html**: The main HTML file.
+- **app.js**: The main JavaScript file.
+- **styles.css**: The main CSS file.
 
 ## Backend
 
