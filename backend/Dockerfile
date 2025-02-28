@@ -10,4 +10,3 @@ RUN pip3 install -r requirements.txt
 EXPOSE 8081
 
 CMD ["python3", "server.py"]
-
